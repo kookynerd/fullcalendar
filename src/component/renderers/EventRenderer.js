@@ -437,14 +437,23 @@ var EventRenderer = FC.EventRenderer = Class.extend({
 		var f2 = seg2.footprint.componentFootprint;
 		var r2 = f2.unzonedRange;
 
-		return r1.startMs - r2.startMs || // earlier events go first
-			(r2.endMs - r2.startMs) - (r1.endMs - r1.startMs) || // tie? longer events go first
-			f2.isAllDay - f1.isAllDay || // tie? put all-day events first (booleans cast to 0/1)
-			compareByFieldSpecs(
-				seg1.footprint.eventDef,
-				seg2.footprint.eventDef,
-				this.view.eventOrderSpecs
+		if (this.view.name == "agendaWeek" || this.view.name == "agendaDay") {
+			return compareByFieldSpecs(
+					seg1.footprint.eventDef,
+					seg2.footprint.eventDef,
+					this.view.eventOrderSpecs
 			);
+		}
+		else {
+			return r1.startMs - r2.startMs || // earlier events go first
+					(r2.endMs - r2.startMs) - (r1.endMs - r1.startMs) || // tie? longer events go first
+					f2.isAllDay - f1.isAllDay || // tie? put all-day events first (booleans cast to 0/1)
+					compareByFieldSpecs(
+							seg1.footprint.eventDef,
+							seg2.footprint.eventDef,
+							this.view.eventOrderSpecs
+					);
+		}
 	}
 
 });
