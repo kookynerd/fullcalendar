@@ -1,5 +1,5 @@
-import * as $ from 'jquery'
-import { compareByFieldSpecs, proxy } from '../../util'
+import * as $ from 'jquery';
+import { compareByFieldSpecs, proxy } from '../../util';
 
 export default class EventRenderer {
 
@@ -434,6 +434,15 @@ export default class EventRenderer {
     let r1 = cf1.unzonedRange
     let r2 = cf2.unzonedRange
 
+    if (this.view.name === 'agendaWeek' || this.view.name === 'agendaDay') {
+      return compareByFieldSpecs(
+            f1.eventDef,
+            f2.eventDef,
+            this.view.eventOrderSpecs,
+            f1.eventDef.miscProps,
+            f2.eventDef.miscProps
+      )
+    }
     return r1.startMs - r2.startMs || // earlier events go first
       (r2.endMs - r2.startMs) - (r1.endMs - r1.startMs) || // tie? longer events go first
       cf2.isAllDay - cf1.isAllDay || // tie? put all-day events first (booleans cast to 0/1)
